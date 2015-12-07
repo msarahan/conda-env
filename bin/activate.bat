@@ -1,4 +1,4 @@
-@echo on
+@echo off
 REM Check for CONDA_ENVS_PATH environment variable
 REM It it doesn't exist, look inside the Anaconda install tree
 IF "%CONDA_ENVS_PATH%" == "" (
@@ -26,7 +26,7 @@ FOR %%F IN ("%CONDA_ENVS_PATH:;=" "%") DO (
 )
 
 IF EXIST "%CONDA_NEW_NAME%\conda-meta" (
-    SET CONDA_NEW_PATH=%CONDA_NEW_NAME%
+    SET "CONDA_NEW_PATH=%CONDA_NEW_NAME%"
     ) ELSE (
     ECHO No environment named "%CONDA_NEW_NAME%" exists in %CONDA_ENVS_PATH%, or is not a valid conda installation directory.
     SET CONDA_NEW_NAME=
@@ -66,6 +66,7 @@ IF "%CONDA_NEW_NAME%"=="" (
    REM Clear CONDA_DEFAULT_ENV so that this is truly a "root" environment, not an environment pointed at root
    SET CONDA_DEFAULT_ENV=
    ) ELSE (
+   SET "CONDA_OLD_PROMPT=%PROMPT%"
    SET "PROMPT=[%CONDA_NEW_NAME%] %PROMPT%"
 )
 SET CONDA_NEW_NAME=
