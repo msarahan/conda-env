@@ -1,7 +1,7 @@
 @echo off
 
 for /f "delims=" %%i in ("%~dp0..\envs") do (
-    set ANACONDA_ENVS=%%~fi
+    set "ANACONDA_ENVS=%%~fi"
 )
 
 if "%1" == "" goto skipmissingarg
@@ -25,12 +25,16 @@ if "%CONDA_DEFAULT_ENV%" == "" goto skipdeactivate
         popd
     :nodeactivate
 
-    set CONDACTIVATE_PATH=%CONDA_DEFAULT_ENV%;%CONDA_DEFAULT_ENV%\Scripts;%CONDA_DEFAULT_ENV%\Library\bin;
-    call set PATH=%%PATH:%CONDACTIVATE_PATH%=%%
+    set "CONDACTIVATE_PATH=%CONDA_DEFAULT_ENV%;%CONDA_DEFAULT_ENV%\Scripts;%CONDA_DEFAULT_ENV%\Library\bin;"
+    call set "PATH=%%PATH:%CONDACTIVATE_PATH%=%%"
     set CONDA_DEFAULT_ENV=
     set CONDA_ENV_PATH=
     set CONDACTIVATE_PATH=
 :skipdeactivate
 
-set PROMPT=%CONDA_OLD_PROMPT%
+REM Make sure that root's Scripts dir is on PATH, for sake of keeping activate/deactivate available.
+call set "PATH_NO_SCRIPTS=%%PATH:%~dp0;=%%"
+if "%PATH_NO_SCRIPTS%"=="%PATH%" set "PATH=%PATH%;%~dp0;"
+
+set "PROMPT=%CONDA_OLD_PROMPT%"
 set CONDA_OLD_PROMPT=
